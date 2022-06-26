@@ -22,11 +22,10 @@
         "illuminate/collections": "^8.29.0",
         "guzzlehttp/psr7": "^1.7.0",
         "psr/cache": "^1.0",
-        "league/flysystem-memory": "^1.0",
-        "cache/filesystem-adapter": "^1.2.0",
         "vlucas/phpdotenv": "^3.3|^4.1|^5.3",
         "lcobucci/jwt": "3.4.3 | ^4.0",
-        "http-interop/http-factory-guzzle": "^1.0"
+        "http-interop/http-factory-guzzle": "^1.0",
+        "spiral/framework": "2.8.13"
     },
     "require-dev": {
         "phpunit/phpunit": "^9.0",

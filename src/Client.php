@@ -54,10 +54,6 @@ class Client
      */
     private $integrationUserAgent;
 
-    /**
-     * @var CacheManager $cacheManager The CacheManager Instance to use for caching.
-     */
-    private $cacheManager;
 
     /**
      * @var AuthorizationMode $authorizationMode The authorization mode to use for api calls.
@@ -71,7 +67,6 @@ class Client
      * @param string                    $organizationUrl
      * @param HttpClient|NULL           $httpClient
      * @param string|NULL               $integrationUserAgent
-     * @param CacheManager|NULL         $cacheManager
      * @param AuthorizationMode|NULL    $authorizationMode
      */
     public function __construct(
@@ -79,14 +74,12 @@ class Client
         string $organizationUrl,
         HttpClient $httpClient = null,
         string $integrationUserAgent = null,
-        CacheManager $cacheManager = null,
         AuthorizationMode $authorizationMode = null
     ) {
         $this->token = $token;
         $this->organizationUrl = $organizationUrl;
         $this->httpClient = $httpClient;
         $this->integrationUserAgent = $integrationUserAgent;
-        $this->cacheManager = $cacheManager;
         $this->authorizationMode = $authorizationMode;
 
         $this->dataStore = new DefaultDataStore(
@@ -95,10 +88,6 @@ class Client
             $this->httpClient,
             $this->authorizationMode
         );
-
-        if(null === $this->cacheManager) {
-            $this->cacheManager = new MemoryManager();
-        }
 
         self::$instance = $this;
     }
@@ -131,16 +120,6 @@ class Client
     public function getDataStore(): DefaultDataStore
     {
         return $this->dataStore;
-    }
-
-    /**
-     * Get the Cache Manager from the Client.
-     *
-     * @return CacheManager
-     */
-    public function getCacheManager(): CacheManager
-    {
-        return $this->cacheManager;
     }
 
     /**

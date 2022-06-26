@@ -17,7 +17,6 @@
 
 namespace Okta\DataStore;
 
-use Cache\Adapter\Common\CacheItem;
 use function GuzzleHttp\Psr7\build_query;
 use function GuzzleHttp\Psr7\parse_query;
 use Http\Client\Common\Plugin\AuthenticationPlugin;
@@ -70,11 +69,6 @@ class DefaultDataStore
      *                      URL/api/v1
      */
     private $baseUrl;
-
-    /**
-     * @var \Okta\Cache\CacheManager The CacheManager Instance from the Client.
-     */
-    private $cacheManager;
 
     /**
      * @var AbstractResource A place to temporally store the resource we are working with.
@@ -263,12 +257,7 @@ class DefaultDataStore
      */
     public function executeRequest($method, UriInterface $uri, $body = '', array $options = [])
     {
-        $cacheManager = $cacheManager = Client::getInstance()->getCacheManager();
-        $cacheKey = $cacheManager->createCacheKey($uri);
-
-        if('GET' == $method && $cacheManager->pool()->hasItem($cacheKey)) {
-            return $cacheManager->pool()->getItem($cacheKey)->get();
-        }
+     //TODO: Implement cache for get requests
 
         $headers = [];
         $headers['Accept'] = 'application/json';
@@ -304,27 +293,7 @@ class DefaultDataStore
             throw new ResourceException($error);
         }
 
-        if (!is_array($result)) {
-            switch($method) {
-                case 'GET':
-                    if(null !== $result) {
-                        $cacheManager->save($uri, $result);
-                    }
-                    break;
-                case 'POST':
-                case 'PUT':
-                    if(null !== $result) {
-                        $cacheManager->delete($uri, $result);
-                        $cacheManager->save($uri, $result);
-                    }
-                    break;
-                case 'DELETE':
-                    if(null !== $this->resource) {
-                        $cacheManager->delete($uri, $this->toStdClass($this->resource));
-                    }
-                    break;
-            }
-        }
+
         return $result;
     }
 
